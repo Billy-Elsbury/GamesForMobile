@@ -7,7 +7,7 @@ public class GestureManager : MonoBehaviour
 {
     float timer = 0f;
     bool touchMoved = false;
-    private float maxTapTime = 0.5f;
+    private float maxTapTime = 0.3f;
     GameManager gameManager;
 
 

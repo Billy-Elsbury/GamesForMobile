@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     ITouchable selectedObject;
     void Start()
     {
+
     }
     void Update()
     {
@@ -17,20 +18,29 @@ public class GameManager : MonoBehaviour
     {
         Ray r = Camera.main.ScreenPointToRay(tapPosition);
         RaycastHit info;
-        if(Physics.Raycast(r, out info))
+        if (Physics.Raycast(r, out info))
         {
             ITouchable newObject = info.collider.gameObject.GetComponent<ITouchable>();
-            if(newObject != null)
+            if (newObject != null)
             {
-                if(selectedObject != null)
+                if (selectedObject != null)
                 {
                     selectedObject.SelectToggle(false);
                 }
                 selectedObject = newObject;
                 newObject.SelectToggle(true);
-
+            }
+        }
+        else
+        {
+            // No object hit
+            if (selectedObject != null)
+            {
+                selectedObject.SelectToggle(false);
+                selectedObject = null;
             }
         }
     }
-    
+
+
 }
