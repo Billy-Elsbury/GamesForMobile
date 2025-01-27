@@ -1,19 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    ITouchable selectedObject;
+    public ITouchable selectedObject;
+    CameraController cameraController;
+
     void Start()
     {
-
+        cameraController = FindObjectOfType<CameraController>();
     }
+
     void Update()
     {
-        
+        // Check if an object is selected
+        if (selectedObject != null)
+        {
+            // Disable camera controls when object is selected
+            cameraController.enabled = false;
+        }
+        else
+        {
+            // Re-enable camera controls when no object is selected
+            cameraController.enabled = true;
+        }
     }
+
     public void tapRegisteredAt(Vector2 tapPosition)
     {
         Ray r = Camera.main.ScreenPointToRay(tapPosition);
@@ -41,6 +52,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-
 }
