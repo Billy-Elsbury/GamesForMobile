@@ -69,7 +69,7 @@ public class CameraController : MonoBehaviour
 
                 lastMidpoint = currentMidpoint;
 
-                // Pinch-to-zoom
+                // Pinch zoom
                 float currentPinchDistance = Vector2.Distance(t1.position, t2.position);
                 float pinchDelta = currentPinchDistance - lastPinchDistance;
 
@@ -82,17 +82,14 @@ public class CameraController : MonoBehaviour
 
     void PanCamera(Vector3 newPanPosition)
     {
-        // Convert screen-space movement into viewport space
         Vector3 offset = Camera.main.ScreenToViewportPoint(lastPanPosition - newPanPosition);
 
-        // Project the camera's right and forward vectors onto the horizontal plane
         Vector3 right = Vector3.ProjectOnPlane(transform.right, Vector3.up);
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
 
-        // Calculate the movement relative to the camera's orientation
+        // movement relative to the camera
         Vector3 move = (right * offset.x + forward * offset.y) * panSpeed;
 
-        // Apply the movement
         transform.Translate(move, Space.World);
 
         lastPanPosition = newPanPosition;
@@ -110,7 +107,7 @@ public class CameraController : MonoBehaviour
 
     void ZoomCamera(float pinchDelta)
     {
-        // Calculate zoom based on pinch delta
+        //zoom based on pinch delta
         Vector3 zoomDirection = transform.forward * (pinchDelta * zoomSpeed * Time.deltaTime);
         transform.position += zoomDirection;
     }
