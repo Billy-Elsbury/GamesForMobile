@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GestureManager : MonoBehaviour
@@ -10,11 +7,9 @@ public class GestureManager : MonoBehaviour
     private float maxTapTime = 0.3f;
     GameManager gameManager;
 
-
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-
     }
 
     void Update()
@@ -23,7 +18,6 @@ public class GestureManager : MonoBehaviour
         {
             Touch t = Input.GetTouch(0);
             timer += Time.deltaTime;
-
 
             switch (t.phase)
             {
@@ -34,16 +28,19 @@ public class GestureManager : MonoBehaviour
 
                 case TouchPhase.Moved:
                     touchMoved = true;
+                    if (gameManager.selectedObject != null)
+                    {
+                        gameManager.selectedObject.MoveObject(t.position);
+                    }
                     break;
 
                 case TouchPhase.Ended:
-                    if ((timer < maxTapTime) && !touchMoved)
+                    if (timer < maxTapTime && !touchMoved)
                     {
                         gameManager.tapRegisteredAt(t.position);
                     }
                     break;
             }
-            print(t.phase);
         }
     }
 }

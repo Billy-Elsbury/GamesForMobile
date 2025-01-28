@@ -12,15 +12,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Check if an object is selected
         if (selectedObject != null)
         {
-            // Disable camera controls when object is selected
             cameraController.enabled = false;
         }
         else
         {
-            // Re-enable camera controls when no object is selected
             cameraController.enabled = true;
         }
     }
@@ -29,6 +26,7 @@ public class GameManager : MonoBehaviour
     {
         Ray r = Camera.main.ScreenPointToRay(tapPosition);
         RaycastHit info;
+
         if (Physics.Raycast(r, out info))
         {
             ITouchable newObject = info.collider.gameObject.GetComponent<ITouchable>();
@@ -44,7 +42,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // No object hit
             if (selectedObject != null)
             {
                 selectedObject.SelectToggle(false);
