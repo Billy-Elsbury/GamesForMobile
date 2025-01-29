@@ -7,46 +7,37 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
     protected float lastPinchDistance;
     protected float scaleSpeed = 0.001f;
     protected float panSpeed = 10f;
+    protected Renderer objectRenderer;
+
+    protected virtual void Start()
+    {
+        objectRenderer = GetComponent<Renderer>();
+    }
 
     public virtual void SelectToggle(bool selected)
     {
-        // Handle selection toggle here (color change, etc.)
+        // Override this in derived classes for specific color changes
     }
 
     public virtual void MoveObject(Vector3 newPanPosition)
     {
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                // Initialize the lastPanPosition when the touch begins
-                lastPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(newPanPosition.x, newPanPosition.y, Mathf.Abs(Camera.main.transform.position.z)));
-            }
-
-            if (touch.phase == TouchPhase.Moved)
-            {
-                // Get the current touch position in world space
-                Vector3 currentPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(newPanPosition.x, newPanPosition.y, Mathf.Abs(Camera.main.transform.position.z)));
-                Vector3 offset = currentPanPosition - lastPanPosition;
-
-                // Move the object based on the touch movement
-                transform.Translate(offset.x * panSpeed, offset.y * panSpeed, 0, Space.World);
-
-                // Update the lastPanPosition
-                lastPanPosition = currentPanPosition;
-            }
-        }
+        transform.position += newPanPosition * panSpeed * Time.deltaTime;
     }
 
     public virtual void ScaleObject(Touch t1, Touch t2)
     {
-        // Scaling logic
+        float currentDistance = Vector2.Distance(t1.position, t2.position);
+        float scaleFactor = (currentDistance - lastPinchDistance) * scaleSpeed;
+        transform.localScale += Vector3.one * scaleFactor;
+        lastPinchDistance = currentDistance;
     }
 
     public virtual void RotateObject(Touch t1, Touch t2)
     {
-        // Rotation logic
+        Vector2 currentMidpoint = (t1.position + t2.position) / 2;
+        Vector2 delta = currentMidpoint - lastTouchPosition;
+        float rotationSpeed = 0.2f;
+        transform.Rotate(Vector3.up, delta.x * rotationSpeed, Space.World);
+        lastTouchPosition = currentMidpoint;
     }
 }

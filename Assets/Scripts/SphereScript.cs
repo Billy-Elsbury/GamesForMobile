@@ -1,42 +1,28 @@
 using UnityEngine;
 
-public class SphereScript : MonoBehaviour
+public class SphereScript : BaseObjectScript
 {
-    private Renderer r;
-    private Vector3 lastPanPosition;
-
-    void Start()
+    protected override void Start()
     {
-        r = GetComponent<Renderer>();
+        base.Start();
     }
 
-    public void SelectToggle(bool selected)
+    public override void SelectToggle(bool selected)
     {
-        r.material.color = selected ? Color.blue : Color.white;
+        objectRenderer.material.color = selected ? Color.blue : Color.white;
     }
 
-    public void MoveObject(Vector3 newPanPosition)
+    public override void MoveObject(Vector3 newPanPosition)
     {
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                lastPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(newPanPosition.x, newPanPosition.y, Mathf.Abs(Camera.main.transform.position.z)));
-            }
-
             if (touch.phase == TouchPhase.Moved)
             {
-                // Get the current touch position in world space
-                Vector3 currentPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(newPanPosition.x, newPanPosition.y, Mathf.Abs(Camera.main.transform.position.z)));
-                Vector3 offset = currentPanPosition - lastPanPosition;
-
-                // Move the object based on the touch movement
-                transform.Translate(offset.x, offset.y, 0, Space.World);
-
-                // Update the last position for the next movement
-                lastPanPosition = currentPanPosition;
+                float orbitSpeed = 2.0f;
+                Vector2 touchDelta = touch.deltaPosition;
+                transform.RotateAround(Camera.main.transform.position, Vector3.up, touchDelta.x * orbitSpeed);
+                transform.RotateAround(Camera.main.transform.position, Camera.main.transform.right, -touchDelta.y * orbitSpeed);
             }
         }
     }

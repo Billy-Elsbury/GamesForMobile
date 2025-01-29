@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class GestureManager : MonoBehaviour
 {
-    float timer = 0f;
-    bool touchMoved = false;
     private float maxTapTime = 0.3f;
-    GameManager gameManager;
+    private float timer = 0f;
+    private bool touchMoved = false;
+    private GameManager gameManager;
 
     void Start()
     {
@@ -16,10 +16,10 @@ public class GestureManager : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
-            Touch t = Input.GetTouch(0);
+            Touch t1 = Input.GetTouch(0);
             timer += Time.deltaTime;
 
-            switch (t.phase)
+            switch (t1.phase)
             {
                 case TouchPhase.Began:
                     timer = 0;
@@ -28,18 +28,21 @@ public class GestureManager : MonoBehaviour
 
                 case TouchPhase.Moved:
                     touchMoved = true;
-                    if (gameManager.selectedObject != null)
-                    {
-                        gameManager.selectedObject.MoveObject(t.position);
-                    }
+                    gameManager.OnObjectMove(t1);
                     break;
 
                 case TouchPhase.Ended:
                     if (timer < maxTapTime && !touchMoved)
                     {
-                        gameManager.tapRegisteredAt(t.position);
+                        gameManager.tapRegisteredAt(t1.position);
                     }
                     break;
+            }
+
+            // Pass multi-touch input for scaling/rotation
+            if (Input.touchCount == 2)
+            {
+                gameManager.OnObjectScaleAndRotate(Input.GetTouch(0), Input.GetTouch(1));
             }
         }
     }
