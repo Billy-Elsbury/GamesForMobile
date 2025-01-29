@@ -50,7 +50,6 @@ public class CameraController : MonoBehaviour
 
             Vector2 currentMidpoint = (t1.position + t2.position) / 2;
 
-            // Handle rotation
             if (t1.phase == TouchPhase.Began || t2.phase == TouchPhase.Began)
             {
                 lastMidpoint = currentMidpoint;
@@ -64,7 +63,7 @@ public class CameraController : MonoBehaviour
                 float horizontalAngle = delta.x * rotationSpeed;
                 OrbitCameraHorizontal(horizontalAngle);
 
-                float verticalAngle = -delta.y * rotationSpeed; // Invert to make upward motion positive
+                float verticalAngle = -delta.y * rotationSpeed; 
                 OrbitCameraVertical(verticalAngle);
 
                 lastMidpoint = currentMidpoint;
@@ -87,7 +86,6 @@ public class CameraController : MonoBehaviour
         Vector3 right = Vector3.ProjectOnPlane(transform.right, Vector3.up);
         Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
 
-        // movement relative to the camera
         Vector3 move = (right * offset.x + forward * offset.y) * panSpeed;
 
         transform.Translate(move, Space.World);
@@ -107,7 +105,6 @@ public class CameraController : MonoBehaviour
 
     void ZoomCamera(float pinchDelta)
     {
-        //zoom based on pinch delta
         Vector3 zoomDirection = transform.forward * (pinchDelta * zoomSpeed * Time.deltaTime);
         transform.position += zoomDirection;
     }

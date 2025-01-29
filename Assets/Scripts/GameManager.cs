@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // Enable/Disable camera controls based on selection
         cameraController.enabled = selectedObject == null;
     }
 

@@ -14,14 +14,24 @@ public class CubeScript : BaseObjectScript
 
     public override void MoveObject(Vector3 newPanPosition)
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount == 0) return;
+
+        Touch touch = Input.GetTouch(0);
+
+        if (touch.phase == TouchPhase.Began)
         {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved)
-            {
-                Vector3 movement = new Vector3(newPanPosition.x, newPanPosition.y, 0);
-                transform.Translate(movement * panSpeed * Time.deltaTime, Space.World);
-            }
+            // Set initial pan position to flat plane perpendicular to camera
+            lastPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Camera.main.WorldToScreenPoint(transform.position).z));
+        }
+        else if (touch.phase == TouchPhase.Moved)
+        {
+            Vector3 currentPanPosition = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Camera.main.WorldToScreenPoint(transform.position).z));
+
+            Vector3 offset = currentPanPosition - lastPanPosition;
+
+            transform.position += offset;
+
+            lastPanPosition = currentPanPosition;
         }
     }
 }

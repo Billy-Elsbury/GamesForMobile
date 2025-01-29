@@ -16,7 +16,7 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
 
     public virtual void SelectToggle(bool selected)
     {
-        // Override this in derived classes for specific color changes
+
     }
 
     public virtual void MoveObject(Vector3 newPanPosition)

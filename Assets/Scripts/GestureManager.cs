@@ -39,7 +39,6 @@ public class GestureManager : MonoBehaviour
                     break;
             }
 
-            // Pass multi-touch input for scaling/rotation
             if (Input.touchCount == 2)
             {
                 gameManager.OnObjectScaleAndRotate(Input.GetTouch(0), Input.GetTouch(1));
