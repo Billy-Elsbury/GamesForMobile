@@ -3,7 +3,7 @@ using UnityEngine;
 public class GestureManager : MonoBehaviour
 {
     private float maxTapTime = 0.3f;
-    private float timer = 0f;
+    private float tapTimer = 0f;
     private bool touchMoved = false;
     private GameManager gameManager;
 
@@ -16,25 +16,22 @@ public class GestureManager : MonoBehaviour
     {
         if (Input.touchCount > 0)
         {
-            Touch t1 = Input.GetTouch(0);
-            timer += Time.deltaTime;
+            Touch t = Input.GetTouch(0);
+            tapTimer += Time.deltaTime;
 
-            switch (t1.phase)
+            switch (t.phase)
             {
                 case TouchPhase.Began:
-                    timer = 0;
+                    tapTimer = 0;
                     touchMoved = false;
                     break;
-
                 case TouchPhase.Moved:
                     touchMoved = true;
-                    gameManager.OnObjectMove(t1);
                     break;
-
                 case TouchPhase.Ended:
-                    if (timer < maxTapTime && !touchMoved)
+                    if (tapTimer < maxTapTime && !touchMoved)
                     {
-                        gameManager.tapRegisteredAt(t1.position);
+                        gameManager.OnTapRegistered(t.position);
                     }
                     break;
             }

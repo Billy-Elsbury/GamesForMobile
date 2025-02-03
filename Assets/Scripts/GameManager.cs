@@ -1,9 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro.Examples;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public ITouchable selectedObject;
+    ITouchable selectedObject;
     private CameraController cameraController;
+    private Vector2 initialTouchPosition;
+    private Transform selectedTransform;
 
     void Start()
     {
@@ -14,40 +19,60 @@ public class GameManager : MonoBehaviour
     {
         // Enable/Disable camera controls based on selection
         cameraController.enabled = selectedObject == null;
+
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                initialTouchPosition = touch.position;
+                OnTapRegistered(touch.position);
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                if (selectedTransform != null)
+                {
+                    OnTouchMove(touch);
+                }
+            }
+        }
     }
 
-    public void tapRegisteredAt(Vector2 tapPosition)
+    public void OnTapRegistered(Vector2 tapPosition)
     {
         Ray r = Camera.main.ScreenPointToRay(tapPosition);
-        if (Physics.Raycast(r, out RaycastHit hit))
+        RaycastHit info;
+        if (Physics.Raycast(r, out info))
         {
-            ITouchable newObject = hit.collider.gameObject.GetComponent<ITouchable>();
+            ITouchable newObject = info.collider.gameObject.GetComponent<ITouchable>();
             if (newObject != null)
             {
-                if (selectedObject != null)
+                if (selectedObject == newObject)
                 {
                     selectedObject.SelectToggle(false);
+                    selectedObject = null;
+                    selectedTransform = null;
                 }
-                selectedObject = newObject;
-                newObject.SelectToggle(true);
-            }
-        }
-        else
-        {
-            if (selectedObject != null)
-            {
-                selectedObject.SelectToggle(false);
-                selectedObject = null;
+                else
+                {
+                    if (selectedObject != null)
+                    {
+                        selectedObject.SelectToggle(false);
+                    }
+                    selectedObject = newObject;
+                    selectedTransform = info.collider.transform;
+                    newObject.SelectToggle(true);
+                }
             }
         }
     }
 
-    public void OnObjectMove(Touch touch)
+    private void OnTouchMove(Touch touch)
     {
         if (selectedObject is BaseObjectScript obj)
         {
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Mathf.Abs(Camera.main.transform.position.z)));
-            obj.MoveObject(touchPosition);
+            obj.MoveObject(selectedTransform, touch);
         }
     }
 

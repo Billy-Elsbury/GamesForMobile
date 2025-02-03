@@ -5,7 +5,7 @@ using System.Threading;
 using UnityEngine;
 
 public class TouchDetect : MonoBehaviour
-{
+{/*
     float timer = 0f;
     bool touchMoved = false;
     private float maxTapTime = 0.5f;
@@ -48,5 +48,5 @@ public class TouchDetect : MonoBehaviour
     private void changeColor(Color color)
     {
         r.material.color = color;
-    }
+    }*/
 }

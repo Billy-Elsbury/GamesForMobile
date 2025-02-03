@@ -18,7 +18,7 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
     {
     }
 
-    public virtual void MoveObject(Vector3 newPanPosition)
+    public virtual void MoveObject(Transform transform, Touch touch)
     {
     }
 

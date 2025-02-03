@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ITouchable
 {
     void SelectToggle(bool isSelected);
-    void MoveObject(Vector3 newPosition);
+    void MoveObject(Transform transform, Touch touch);
 
 }
