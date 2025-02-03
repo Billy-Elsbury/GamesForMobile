@@ -16,12 +16,10 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
 
     public virtual void SelectToggle(bool selected)
     {
-
     }
 
     public virtual void MoveObject(Vector3 newPanPosition)
     {
-        transform.position += newPanPosition * panSpeed * Time.deltaTime;
     }
 
     public virtual void ScaleObject(Touch t1, Touch t2)
