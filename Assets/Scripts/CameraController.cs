@@ -15,8 +15,12 @@ public class CameraController : MonoBehaviour
     private float lastPinchDistance;
     private bool isPanning = false;
 
+
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+
         gameManager = FindObjectOfType<GameManager>();
     }
 
