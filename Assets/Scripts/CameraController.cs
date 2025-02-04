@@ -137,7 +137,7 @@ public class CameraController : MonoBehaviour
 
     void OrbitCameraVertical(float angle)
     {
-        transform.RotateAround(transform.position, Vector3.right, angle);
+        transform.RotateAround(transform.position, transform.right, angle);
     }
 
     void ZoomCamera(float pinchDelta)

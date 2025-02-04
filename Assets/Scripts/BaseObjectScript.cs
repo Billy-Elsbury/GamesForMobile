@@ -25,12 +25,18 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
     public virtual void ScaleObject(Touch t1, Touch t2)
     {
         float currentDistance = Vector2.Distance(t1.position, t2.position);
+
+        if (t1.phase == TouchPhase.Began || t2.phase == TouchPhase.Began)
+        {
+            lastPinchDistance = currentDistance; //reset pinch distance on new pinch
+        }
+
         float scaleFactor = (currentDistance - lastPinchDistance) * scaleSpeed;
         transform.localScale += Vector3.one * scaleFactor;
+
         lastPinchDistance = currentDistance;
-
-
     }
+
 
     public virtual void RotateObject(Touch t1, Touch t2)
     {
