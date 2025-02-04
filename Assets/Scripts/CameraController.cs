@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class CameraController : MonoBehaviour
     public float panSpeed = 20f;
     public float rotationSpeed = 0.2f;
     public float zoomSpeed = 1f;
+    public float gyroSensitivity = 2.0f;
     public Transform groundPlane;
 
     private GameManager gameManager;
@@ -15,11 +17,11 @@ public class CameraController : MonoBehaviour
     private float lastPinchDistance;
     private bool isPanning = false;
 
+    private bool useGyro = false;
 
-    //https://discussions.unity.com/t/how-to-limit-frame-rate-in-unity-editor/49059
     void Awake()
     {
-        QualitySettings.vSyncCount = 0;  // VSync must be disabled
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 45;
     }
 
@@ -30,6 +32,11 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (useGyro)
+        {
+            ApplyGyroRotation();
+        }
+
         if (Input.touchCount == 1)
         {
             Touch t = Input.GetTouch(0);
@@ -65,18 +72,18 @@ public class CameraController : MonoBehaviour
             }
             else if (t1.phase == TouchPhase.Moved || t2.phase == TouchPhase.Moved)
             {
-                // Rotation
+                //rotation touch
                 Vector2 delta = currentMidpoint - lastMidpoint;
 
                 float horizontalAngle = delta.x * rotationSpeed;
                 OrbitCameraHorizontal(horizontalAngle);
 
-                float verticalAngle = -delta.y * rotationSpeed; 
+                float verticalAngle = -delta.y * rotationSpeed;
                 OrbitCameraVertical(verticalAngle);
 
                 lastMidpoint = currentMidpoint;
 
-                // Pinch zoom
+                //pinch zoom
                 float currentPinchDistance = Vector2.Distance(t1.position, t2.position);
                 float pinchDelta = currentPinchDistance - lastPinchDistance;
 
@@ -85,6 +92,28 @@ public class CameraController : MonoBehaviour
                 lastPinchDistance = currentPinchDistance;
             }
         }
+    }
+
+    void ApplyGyroRotation()
+    {
+        if (!SystemInfo.supportsGyroscope) return;
+
+        Vector3 gyroDelta = Input.gyro.rotationRateUnbiased;
+
+        transform.Rotate(Vector3.up, -gyroDelta.y * gyroSensitivity, Space.World);
+        transform.Rotate(Vector3.right, -gyroDelta.x * gyroSensitivity, Space.Self);
+    }
+
+    public void ToggleGyro()
+    {
+        useGyro = !useGyro;
+        if (useGyro) EnableGyro();
+    }
+
+    private void EnableGyro()
+    {
+        Input.gyro.enabled = true;
+        useGyro = true;
     }
 
     void PanCamera(Vector3 newPanPosition)
@@ -103,12 +132,12 @@ public class CameraController : MonoBehaviour
 
     void OrbitCameraHorizontal(float angle)
     {
-        transform.RotateAround(transform.position, groundPlane.up, angle);
+        transform.RotateAround(transform.position, Vector3.up, angle);
     }
 
     void OrbitCameraVertical(float angle)
     {
-        transform.RotateAround(transform.position, transform.right, angle);
+        transform.RotateAround(transform.position, Vector3.right, angle);
     }
 
     void ZoomCamera(float pinchDelta)

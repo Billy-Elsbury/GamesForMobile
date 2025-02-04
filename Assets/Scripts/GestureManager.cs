@@ -7,6 +7,7 @@ public class GestureManager : MonoBehaviour
     private bool touchMoved = false;
     private GameManager gameManager;
 
+
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
