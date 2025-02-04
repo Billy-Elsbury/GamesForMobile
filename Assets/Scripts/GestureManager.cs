@@ -29,7 +29,7 @@ public class GestureManager : MonoBehaviour
                     touchMoved = true;
                     break;
                 case TouchPhase.Ended:
-                    if (tapTimer < maxTapTime && !touchMoved)
+                    if (tapTimer > maxTapTime && !touchMoved)
                     {
                         gameManager.OnTapRegistered(t.position);
                     }

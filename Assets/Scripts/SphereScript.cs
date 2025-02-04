@@ -3,6 +3,8 @@ using UnityEngine;
 public class SphereScript : BaseObjectScript
 {
     private Vector3 initialTouchWorldPosition;
+    private float rotateMagnifier = 0.05f;
+
 
     protected override void Start()
     {
@@ -19,7 +21,7 @@ public class SphereScript : BaseObjectScript
         Vector3 cameraPosition = Camera.main.transform.position;
 
         // touch position to world coordinates
-        Vector3 touchDelta = new Vector3(touch.deltaPosition.x, touch.deltaPosition.y, 0) * 0.01f;
+        Vector3 touchDelta = new Vector3(touch.deltaPosition.x, touch.deltaPosition.y, 0) * rotateMagnifier;
         
         Vector3 direction = transform.position - cameraPosition;
 

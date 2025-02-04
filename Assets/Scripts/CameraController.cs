@@ -16,11 +16,15 @@ public class CameraController : MonoBehaviour
     private bool isPanning = false;
 
 
+    //https://discussions.unity.com/t/how-to-limit-frame-rate-in-unity-editor/49059
+    void Awake()
+    {
+        QualitySettings.vSyncCount = 0;  // VSync must be disabled
+        Application.targetFrameRate = 45;
+    }
+
     void Start()
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
-
         gameManager = FindObjectOfType<GameManager>();
     }
 

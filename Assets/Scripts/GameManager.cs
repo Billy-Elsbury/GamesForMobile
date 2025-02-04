@@ -50,23 +50,30 @@ public class GameManager : MonoBehaviour
             {
                 if (selectedObject == newObject)
                 {
+                    //deselect if tapping same object again
                     selectedObject.SelectToggle(false);
                     selectedObject = null;
                     selectedTransform = null;
                 }
                 else
                 {
-                    if (selectedObject != null)
-                    {
-                        selectedObject.SelectToggle(false);
-                    }
+                    //deselect previous and select the new object
+                    selectedObject?.SelectToggle(false);
                     selectedObject = newObject;
                     selectedTransform = info.collider.transform;
                     newObject.SelectToggle(true);
                 }
             }
+            else
+            {
+                //deselect if tapping anything else
+                selectedObject?.SelectToggle(false);
+                selectedObject = null;
+                selectedTransform = null;
+            }
         }
     }
+
 
     private void OnTouchMove(Touch touch)
     {
