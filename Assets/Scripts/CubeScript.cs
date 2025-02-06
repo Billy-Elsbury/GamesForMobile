@@ -9,6 +9,7 @@ public class CubeScript : BaseObjectScript
 
     public override void SelectToggle(bool selected)
     {
+        base.SelectToggle(selected);
         objectRenderer.material.color = selected ? Color.red : Color.white;
     }
 

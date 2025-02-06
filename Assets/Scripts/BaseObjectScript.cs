@@ -1,3 +1,4 @@
+using TMPro.Examples;
 using UnityEngine;
 
 public abstract class BaseObjectScript : MonoBehaviour, ITouchable
@@ -9,13 +10,17 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
     protected float panSpeed = 10f;
     protected Renderer objectRenderer;
 
+    public Rigidbody rigidBody;
+
     protected virtual void Start()
     {
         objectRenderer = GetComponent<Renderer>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     public virtual void SelectToggle(bool selected)
     {
+        rigidBody.isKinematic = selected == true;
     }
 
     public virtual void MoveObject(Transform transform, Touch touch)
