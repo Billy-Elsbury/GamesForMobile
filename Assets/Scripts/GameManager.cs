@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    ITouchable selectedObject;
+    protected ITouchable selectedObject;
     private CameraController cameraController;
     private Vector2 initialTouchPosition;
     private Transform selectedTransform;
@@ -38,6 +38,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public void SetSelectedObject(ITouchable newObject)
+    {
+        selectedObject = newObject;
+    }
+
 
     public void OnTapRegistered(Vector2 tapPosition)
     {

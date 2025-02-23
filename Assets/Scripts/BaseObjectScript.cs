@@ -9,8 +9,7 @@ public abstract class BaseObjectScript : MonoBehaviour, ITouchable
     protected float scaleSpeed = 0.001f;
     protected float panSpeed = 10f;
     protected Renderer objectRenderer;
-
-    public Rigidbody rigidBody;
+    protected Rigidbody rigidBody;
 
     protected virtual void Start()
     {
