@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-using System.Collections; // Needed for the delay
+using System.Collections;
 using UnityEngine.UI;
 
 public class MiniGameManager : MonoBehaviour
@@ -8,12 +8,15 @@ public class MiniGameManager : MonoBehaviour
     private float highestPoint = 0f;
     private bool isGameOver = false;
     private float restartDelay = 3f;
+    private bool isSpawning = false; // Flag to prevent multiple spawns
 
     public TMP_Text currentScoreText;
     public TMP_Text finalScoreText;
     public GameObject gameOverPanel;
     public GameObject cubePrefab;
     public Transform spawnPoint;
+
+    public bool useRandomSizedCubes = true; // Public toggle for game mode
 
     private GameObject currentCube;
 
@@ -54,10 +57,48 @@ public class MiniGameManager : MonoBehaviour
 
     public void SpawnNewCube()
     {
-        // Spawn cube at random size
-        Vector3 randomSize = new Vector3(Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f));
-        currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
-        currentCube.transform.localScale = randomSize;
+        if (isSpawning) return; // Prevent multiple spawns
+
+        isSpawning = true; // Set the flag to true
+
+        if (useRandomSizedCubes)
+        {
+            // Spawn cube at random size
+            Vector3 randomSize = new Vector3(Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f));
+            currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
+            currentCube.transform.localScale = randomSize;
+        }
+        else
+        {
+            // Spawn cube at standard size
+            currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
+            currentCube.transform.localScale = Vector3.one;
+        }
+
         currentCube.GetComponent<Rigidbody>().isKinematic = true; // Keep it floating
+        StartCoroutine(ResetSpawnFlag()); // Reset the flag after a short delay
+    }
+
+    private IEnumerator ResetSpawnFlag()
+    {
+        yield return new WaitForSeconds(0.5f); // Adjust the delay as needed
+        isSpawning = false; // Reset the flag
+    }
+
+    public void SlowMotion()
+    {
+        StartCoroutine(SlowMotionCoroutine());
+    }
+
+    private IEnumerator SlowMotionCoroutine()
+    {
+        Time.timeScale = 0.1f; // Slow down time
+        yield return new WaitForSecondsRealtime(2f); // Wait for 2 real-time seconds
+        Time.timeScale = 1f; // Restore normal time
+    }
+
+    public float GetHighestPoint()
+    {
+        return highestPoint;
     }
 }

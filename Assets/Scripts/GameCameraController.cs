@@ -94,10 +94,9 @@ public class GameCameraController : MonoBehaviour
     {
         Vector3 offset = Camera.main.ScreenToViewportPoint(lastPanPosition - newPanPosition);
 
-        Vector3 right = Vector3.ProjectOnPlane(Vector3.right, Vector3.up);
         Vector3 up = Vector3.ProjectOnPlane(Vector3.up, Vector3.right);
 
-        Vector3 move = (right * offset.x + up * offset.y) * panSpeed;
+        Vector3 move = (up * offset.y) * panSpeed;
 
         transform.Translate(move, Space.World);
 
