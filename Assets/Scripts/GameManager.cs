@@ -6,13 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     protected ITouchable selectedObject;
-    private CameraController cameraController;
+    private GameCameraController cameraController;
     private Vector2 initialTouchPosition;
     private Transform selectedTransform;
 
     void Start()
     {
-        cameraController = FindObjectOfType<CameraController>();
+        cameraController = FindObjectOfType<GameCameraController>();
     }
 
     void Update()

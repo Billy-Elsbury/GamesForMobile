@@ -22,12 +22,7 @@ public class CubeScript : BaseObjectScript
         Vector3 touchPosition = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, Camera.main.WorldToScreenPoint(transform.position).z));
         transform.position = new Vector3(touchPosition.x, touchPosition.y, transform.position.z);
 
-        // Notify MiniGameManager that the cube has moved
-        MiniGameManager miniGameManager = FindObjectOfType<MiniGameManager>();
-        if (miniGameManager != null)
-        {
-            miniGameManager.OnCubeMoved();
-        }
+        
     }
 
 
@@ -45,6 +40,9 @@ public class CubeScript : BaseObjectScript
         {
             isStacked = true; // Prevent multiple updates from bouncing
             miniGameManager.UpdateHighestPoint(transform.position.y);
+
+            // Notify MiniGameManager that the cube has been stacked
+            miniGameManager.SpawnNewCube();
         }
     }
 }

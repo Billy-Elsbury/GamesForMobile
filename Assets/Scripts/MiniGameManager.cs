@@ -7,9 +7,10 @@ public class MiniGameManager : MonoBehaviour
 {
     private float highestPoint = 0f;
     private bool isGameOver = false;
-    private bool cubeMoved = false; // Track if the cube has been moved
+    private float restartDelay = 3f;
 
-    public TMP_Text scoreText;
+    public TMP_Text currentScoreText;
+    public TMP_Text finalScoreText;
     public GameObject gameOverPanel;
     public GameObject cubePrefab;
     public Transform spawnPoint;
@@ -30,7 +31,7 @@ public class MiniGameManager : MonoBehaviour
         {
             highestPoint = cubeY;
         }
-        scoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
+        currentScoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
     }
 
     public void GameOver()
@@ -39,44 +40,24 @@ public class MiniGameManager : MonoBehaviour
         {
             isGameOver = true;
             Debug.Log("Game Over! Highest Stack: " + highestPoint);
-            scoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
+            finalScoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
             gameOverPanel.SetActive(true);
+            StartCoroutine(DelayedRestart(restartDelay));
         }
     }
 
-    public void RestartGame()
+    private IEnumerator DelayedRestart(float delay)
     {
+        yield return new WaitForSeconds(delay);
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
-    private void SpawnNewCube()
+    public void SpawnNewCube()
     {
         // Spawn cube at random size
         Vector3 randomSize = new Vector3(Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f));
         currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
         currentCube.transform.localScale = randomSize;
         currentCube.GetComponent<Rigidbody>().isKinematic = true; // Keep it floating
-        cubeMoved = false; // Reset move tracking
-    }
-
-    public void OnCubeMoved()
-    {
-        if (!cubeMoved)
-        {
-            cubeMoved = true;
-            StartCoroutine(SpawnNextCubeWithDelay());
-        }
-    }
-
-    private IEnumerator SpawnNextCubeWithDelay()
-    {
-        yield return new WaitForSeconds(2f);
-
-        if (currentCube != null)
-        {
-            currentCube.GetComponent<Rigidbody>().isKinematic = true; // Enable physics
-        }
-
-        SpawnNewCube();
     }
 }
