@@ -112,6 +112,6 @@ public class GameCameraController : MonoBehaviour
     void OrbitCameraVertical(float angle)
     {
         // Rotate around the world X-axis
-        transform.RotateAround(transform.position, Vector3.right, angle);
+        transform.RotateAround(transform.position, transform.right, angle);
     }
 }

@@ -293,7 +293,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 'Highest Stack: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -802,7 +802,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 6996817477502291447, guid: 983a6faeb7c5ce345b4e89e06a2f7168,
     type: 3}
   spawnPoint: {fileID: 1581386139}
-  useRandomSizedCubes: 1
+  useRandomSizedCubes: 0
 --- !u!4 &829215959
 Transform:
   m_ObjectHideFlags: 0
@@ -1773,8 +1773,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+      - m_Target: {fileID: 963194229}
+        m_TargetAssemblyTypeName: GameCameraController, Assembly-CSharp
         m_MethodName: ToggleGyro
         m_Mode: 1
         m_Arguments:
