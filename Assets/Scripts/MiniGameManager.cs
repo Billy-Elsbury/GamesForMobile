@@ -7,7 +7,6 @@ public class MiniGameManager : MonoBehaviour
 {
     private float highestPoint = 0f;
     private bool isGameOver = false;
-    private float restartDelay = 3f;
     private bool isSpawning = false; // Flag to prevent multiple spawns
 
     public TMP_Text currentScoreText;
@@ -45,14 +44,7 @@ public class MiniGameManager : MonoBehaviour
             Debug.Log("Game Over! Highest Stack: " + highestPoint);
             finalScoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
             gameOverPanel.SetActive(true);
-            StartCoroutine(DelayedRestart(restartDelay));
         }
-    }
-
-    private IEnumerator DelayedRestart(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     public void SpawnNewCube()
