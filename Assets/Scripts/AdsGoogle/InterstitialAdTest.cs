@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InterstitialAd : MonoBehaviour
+public class InterstitialAdTest : MonoBehaviour
 {
 
     // These ad units are configured to always serve test ads.
@@ -18,6 +18,22 @@ public class InterstitialAd : MonoBehaviour
 
     private InterstitialAd _interstitialAd;
 
+
+    public void Start()
+    {
+
+
+        LoadInterstitialAd();
+        Debug.Log("Loading Called");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        { 
+            ShowInterstitialAd(); 
+        }    
+    }
     /// <summary>
     /// Loads the interstitial ad.
     /// </summary>
@@ -54,21 +70,6 @@ public class InterstitialAd : MonoBehaviour
             });
     }
 
-    private string GetResponseInfo()
-    {
-        throw new NotImplementedException();
-    }
-
-    private static void Load(string adUnitId, AdRequest adRequest, Action<InterstitialAd, LoadAdError> value)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void Destroy()
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Shows the interstitial ad.
     /// </summary>
@@ -85,13 +86,4 @@ public class InterstitialAd : MonoBehaviour
         }
     }
 
-    private void Show()
-    {
-        throw new NotImplementedException();
-    }
-
-    private bool CanShowAd()
-    {
-        throw new NotImplementedException();
-    }
 }
