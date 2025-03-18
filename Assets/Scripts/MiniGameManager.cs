@@ -51,24 +51,51 @@ public class MiniGameManager : MonoBehaviour
     {
         if (isSpawning) return; // Prevent multiple spawns
 
+        StartCoroutine(WaitForStableTower());
+    }
+
+    private IEnumerator WaitForStableTower()
+    {
         isSpawning = true; // Set the flag to true
 
+        // Wait until the tower is stable
+        while (!IsTowerStable())
+        {
+            yield return null;
+        }
+
+        // Spawn the new cube
         if (useRandomSizedCubes)
         {
-            // Spawn cube at random size
             Vector3 randomSize = new Vector3(Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f), Random.Range(0.5f, 1.5f));
             currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
             currentCube.transform.localScale = randomSize;
         }
         else
         {
-            // Spawn cube at standard size
             currentCube = Instantiate(cubePrefab, spawnPoint.position, Quaternion.identity);
             currentCube.transform.localScale = Vector3.one;
         }
 
         currentCube.GetComponent<Rigidbody>().isKinematic = true; // Keep it floating
         StartCoroutine(ResetSpawnFlag()); // Reset the flag after a short delay
+    }
+
+    private bool IsTowerStable()
+    {
+        // Get all cubes in the scene
+        Rigidbody[] cubes = FindObjectsOfType<Rigidbody>();
+
+        foreach (Rigidbody cube in cubes)
+        {
+            // If any cube is still moving, the tower is not stable
+            if (cube.velocity.magnitude > 0.1f)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private IEnumerator ResetSpawnFlag()
@@ -84,7 +111,7 @@ public class MiniGameManager : MonoBehaviour
 
     private IEnumerator SlowMotionCoroutine()
     {
-        Time.timeScale = 0.1f; // Slow down time
+        Time.timeScale = 0.5f; // Slow down time
         yield return new WaitForSecondsRealtime(2f); // Wait for 2 real-time seconds
         Time.timeScale = 1f; // Restore normal time
     }
