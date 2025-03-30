@@ -1157,6 +1157,7 @@ MonoBehaviour:
     type: 3}
   spawnPoint: {fileID: 1581386139}
   useRandomSizedCubes: 0
+  googleAppsScriptURL: https://script.google.com/macros/s/AKfycbyIREPsi8yteCZEJq4L4VNcP9DRLKhucX4OMv6Nha_23VaCHKWU_IB8vs2f-CJLz2X8/exec
 --- !u!4 &829215959
 Transform:
   m_ObjectHideFlags: 0
