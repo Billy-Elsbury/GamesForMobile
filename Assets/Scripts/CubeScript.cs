@@ -3,14 +3,27 @@ using UnityEngine;
 public class CubeScript : BaseObjectScript
 {
     private MiniGameManager miniGameManager;
-    private bool isStacked = false; // Tracks if this cube has been placed on the stack
+    private bool isStacked = false; //Tracks if this cube has been placed on the stack
     private float dropHeightDistanceSpace = 1.5f;
     private float slowTimeMinHeight = 2f;
+
+ 
+    [SerializeField] private AudioClip stackSound;
+    private AudioSource audioSource;
 
     protected override void Start()
     {
         base.Start();
         miniGameManager = FindObjectOfType<MiniGameManager>();
+        // --- Get the AudioSource ---
+        audioSource = GetComponent<AudioSource>(); // Assumes an AudioSource component exists on the cube GameObject/Prefab
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+            audioSource.volume = 0.5f;
+        }
     }
 
     public override void SelectToggle(bool selected)
@@ -48,6 +61,11 @@ public class CubeScript : BaseObjectScript
         }
         else if (collision.gameObject.CompareTag("Cube") && !isStacked)
         {
+            if (audioSource != null && stackSound != null)
+            {
+                audioSource.PlayOneShot(stackSound);
+            }
+
             isStacked = true; // Prevent multiple updates
             miniGameManager.UpdateHighestPoint(transform.position.y);
             miniGameManager.SpawnNewCube(); // Spawn a new cube
