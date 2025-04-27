@@ -9,6 +9,7 @@ public class CylinderScript : BaseObjectScript
 
     public override void SelectToggle(bool selected)
     {
+        base.SelectToggle(selected);
         objectRenderer.material.color = selected ? Color.yellow : Color.white;
     }
 
