@@ -15,7 +15,6 @@ public class CubeScript : BaseObjectScript
     {
         base.Start();
         miniGameManager = FindObjectOfType<MiniGameManager>();
-        // --- Get the AudioSource ---
         audioSource = GetComponent<AudioSource>(); // Assumes an AudioSource component exists on the cube GameObject/Prefab
         if (audioSource == null)
         {
@@ -30,7 +29,7 @@ public class CubeScript : BaseObjectScript
     {
         if (isStacked) return; // Prevent selection if stacked
         base.SelectToggle(selected);
-        objectRenderer.material.color = selected ? Color.red : Color.white;
+        objectRenderer.material.color = selected ? Color.white : Color.white;
     }
 
     public override void MoveObject(Transform transform, Touch touch)
@@ -69,7 +68,7 @@ public class CubeScript : BaseObjectScript
             isStacked = true; // Prevent multiple updates
             miniGameManager.UpdateHighestPoint(transform.position.y);
             miniGameManager.SpawnNewCube(); // Spawn a new cube
-            objectRenderer.material.color = Color.yellow;
+            objectRenderer.material.color = Color.grey;
         }
     }
     private void Update()
