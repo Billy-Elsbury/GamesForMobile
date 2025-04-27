@@ -177,10 +177,10 @@ public class MiniGameManager : MonoBehaviour
         StartCoroutine(ExplosionSequenceCoroutine(hitPosition));
     }
 
-    private IEnumerator ExplosionSequenceCoroutine(Vector3 hitPosition)
+    private IEnumerator ExplosionSequenceCoroutine(Vector3 hitPosition) // hitPosition is still used for AddExplosionForce origin
     {
-        CubeScript[] allCubes = FindObjectsOfType<CubeScript>();
-        foreach (CubeScript cube in allCubes)
+        CubeScript[] allCubesScripts = FindObjectsOfType<CubeScript>();
+        foreach (CubeScript cube in allCubesScripts)
         {
             if (cube != null)
             {
@@ -190,31 +190,40 @@ public class MiniGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(soundToExplosionDelay);
 
-        if (explosionParticlesPrefab != null)
-        {
-            Instantiate(explosionParticlesPrefab, hitPosition, Quaternion.identity);
-        }
+        // Find all cube rigidbodies to get their positions and apply force
+        Rigidbody[] allRigidbodies = FindObjectsOfType<Rigidbody>();
 
-        allCubes = FindObjectsOfType<CubeScript>();
-        foreach (CubeScript cube in allCubes)
+        // Instantiate particles and stop flashing for each cube
+        foreach (Rigidbody rb in allRigidbodies)
         {
-            if (cube != null)
+            if (rb != null && rb.CompareTag("Cube"))
             {
-                cube.StopFlashing();
+                // Instantiate particles at this cube's position
+                if (explosionParticlesPrefab != null)
+                {
+                    Instantiate(explosionParticlesPrefab, rb.position, Quaternion.identity);
+                }
+
+                // Stop flashing for this cube (find its script)
+                CubeScript cubeScript = rb.GetComponent<CubeScript>();
+                if (cubeScript != null)
+                {
+                    cubeScript.StopFlashing();
+                }
             }
         }
 
-        Rigidbody[] allRigidbodies = FindObjectsOfType<Rigidbody>();
+        // Apply explosion force (still originates from the initial hit point for direction)
         foreach (Rigidbody rb in allRigidbodies)
         {
-            if (rb.CompareTag("Cube"))
+            if (rb != null && rb.CompareTag("Cube"))
             {
                 rb.isKinematic = false;
                 rb.AddExplosionForce(explosionForce, hitPosition, explosionRadius, explosionUpwardModifier, ForceMode.Impulse);
             }
         }
 
-        yield return new WaitForSeconds(soundToExplosionDelay);
+        yield return new WaitForSeconds(soundToExplosionDelay); // Using existing delay before GameOver
 
         GameOver();
     }

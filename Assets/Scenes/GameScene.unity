@@ -1168,9 +1168,10 @@ MonoBehaviour:
   explosionForce: 10
   explosionRadius: 50
   explosionUpwardModifier: 25
-  soundToExplosionDelay: 2.7
-  flashInterval: 0.6
-  explosionParticlesPrefab: {fileID: 0}
+  soundToExplosionDelay: 4
+  flashInterval: 0.5
+  explosionParticlesPrefab: {fileID: 725748389856807712, guid: 4bda94453d2ca7444a0fff05b2d425f5,
+    type: 3}
 --- !u!4 &829215959
 Transform:
   m_ObjectHideFlags: 0
