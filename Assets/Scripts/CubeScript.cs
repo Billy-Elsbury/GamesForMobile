@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CubeScript : BaseObjectScript
@@ -7,7 +8,9 @@ public class CubeScript : BaseObjectScript
     private float dropHeightDistanceSpace = 1.5f;
     private float slowTimeMinHeight = 2f;
 
- 
+    private Color originalColor;
+    private Coroutine flashingCoroutine = null;
+
     [SerializeField] private AudioClip stackSound;
     private AudioSource audioSource;
 
@@ -21,7 +24,7 @@ public class CubeScript : BaseObjectScript
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
-            audioSource.volume = 0.5f;
+            audioSource.volume = 0.8f;
         }
     }
 
@@ -56,7 +59,7 @@ public class CubeScript : BaseObjectScript
 
         if (collision.gameObject.CompareTag("Ground"))
         {
-            miniGameManager.GameOver();
+            miniGameManager.TriggerExplosionAndGameOverSequence(collision.contacts[0].point);
         }
         else if (collision.gameObject.CompareTag("Cube") && !isStacked)
         {
@@ -73,9 +76,48 @@ public class CubeScript : BaseObjectScript
     }
     private void Update()
     {
-        if (transform.position.y < slowTimeMinHeight)
+    }
+
+    public void StartFlashing(float interval)
+    {
+        if (objectRenderer == null)
         {
-            miniGameManager.SlowMotion();
+            Debug.LogWarning("Object Renderer not found on cube!", this);
+            return;
+        }
+
+        if (flashingCoroutine != null)
+        {
+            StopCoroutine(flashingCoroutine);
+        }
+
+        originalColor = objectRenderer.material.color;
+        flashingCoroutine = StartCoroutine(FlashCoroutine(interval));
+    }
+
+    public void StopFlashing()
+    {
+        if (flashingCoroutine != null)
+        {
+            StopCoroutine(flashingCoroutine);
+            flashingCoroutine = null;
+
+            if (objectRenderer != null)
+            {
+                objectRenderer.material.color = originalColor;
+            }
+        }
+    }
+
+    private IEnumerator FlashCoroutine(float interval)
+    {
+        while (true)
+        {
+            objectRenderer.material.color = Color.red;
+            yield return new WaitForSeconds(interval / 2f);
+
+            objectRenderer.material.color = originalColor;
+            yield return new WaitForSeconds(interval / 2f);
         }
     }
 }

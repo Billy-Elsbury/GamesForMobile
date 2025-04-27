@@ -1,4 +1,3 @@
-using TMPro.Examples;
 using UnityEngine;
 
 public abstract class BaseObjectScript : MonoBehaviour, ITouchable

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Text;
 using System;
+using System.Collections.Generic;
 
 public class MiniGameManager : MonoBehaviour
 {
@@ -24,8 +25,22 @@ public class MiniGameManager : MonoBehaviour
 
     private string googleAppsScriptURL = "https://script.google.com/macros/s/AKfycbwI4A7jdvK8IMcC6Lbzmk5WUHZonvx9090A_jD_Q3_Ucf7BxIXt6rrrGs8DxnGGgL71/exec";
 
+    // Explosion Settings
+    [Header("Explosion Settings")]
+    public AudioClip explosionSound;
+    public float explosionForce = 0f;
+    public float explosionRadius = 0f;
+    public float explosionUpwardModifier = 0f;
+    public float soundToExplosionDelay = 0.3f;
+    public float flashInterval = 0.6f;
+
+    private AudioSource managerAudioSource;
+
+    public ParticleSystem explosionParticlesPrefab;
+
     private void Start()
     {
+        managerAudioSource = GetComponent<AudioSource>();
         highestPoint = 0f;
         isGameOver = false;
         gameOverPanel.SetActive(false);
@@ -43,8 +58,6 @@ public class MiniGameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (!isGameOver)
-        {
             isGameOver = true;
             Debug.Log("Game Over! Highest Stack: " + highestPoint);
             finalScoreText.text = "Highest Stack: " + highestPoint.ToString("F2");
@@ -55,7 +68,6 @@ public class MiniGameManager : MonoBehaviour
             {
                 StartCoroutine(SendScoreToGoogleSheet(highestPoint));
             }
-        }
     }
 
     private IEnumerator SendScoreToGoogleSheet(float score)
@@ -147,20 +159,63 @@ public class MiniGameManager : MonoBehaviour
         isSpawning = false;
     }
 
-    public void SlowMotion()
-    {
-        StartCoroutine(SlowMotionCoroutine());
-    }
-
-    private IEnumerator SlowMotionCoroutine()
-    {
-        Time.timeScale = 0.5f;
-        yield return new WaitForSecondsRealtime(2f);
-        Time.timeScale = 1f;
-    }
-
     public float GetHighestPoint()
     {
         return highestPoint;
+    }
+
+    public void TriggerExplosionAndGameOverSequence(Vector3 hitPosition)
+    {
+        if (isGameOver) return; 
+        isGameOver = true; 
+
+        if (managerAudioSource != null && explosionSound != null)
+        {
+            managerAudioSource.PlayOneShot(explosionSound);
+        }
+
+        StartCoroutine(ExplosionSequenceCoroutine(hitPosition));
+    }
+
+    private IEnumerator ExplosionSequenceCoroutine(Vector3 hitPosition)
+    {
+        CubeScript[] allCubes = FindObjectsOfType<CubeScript>();
+        foreach (CubeScript cube in allCubes)
+        {
+            if (cube != null)
+            {
+                cube.StartFlashing(flashInterval);
+            }
+        }
+
+        yield return new WaitForSeconds(soundToExplosionDelay);
+
+        if (explosionParticlesPrefab != null)
+        {
+            Instantiate(explosionParticlesPrefab, hitPosition, Quaternion.identity);
+        }
+
+        allCubes = FindObjectsOfType<CubeScript>();
+        foreach (CubeScript cube in allCubes)
+        {
+            if (cube != null)
+            {
+                cube.StopFlashing();
+            }
+        }
+
+        Rigidbody[] allRigidbodies = FindObjectsOfType<Rigidbody>();
+        foreach (Rigidbody rb in allRigidbodies)
+        {
+            if (rb.CompareTag("Cube"))
+            {
+                rb.isKinematic = false;
+                rb.AddExplosionForce(explosionForce, hitPosition, explosionRadius, explosionUpwardModifier, ForceMode.Impulse);
+            }
+        }
+
+        yield return new WaitForSeconds(soundToExplosionDelay);
+
+        GameOver();
     }
 }
