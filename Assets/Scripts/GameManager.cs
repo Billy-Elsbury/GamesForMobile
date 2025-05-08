@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         selectedObject = newObject;
     }
 
+
     public void OnTapRegistered(Vector2 tapPosition)
     {
         Ray r = Camera.main.ScreenPointToRay(tapPosition);
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
 
     private void OnTouchMove(Touch touch)
     {
