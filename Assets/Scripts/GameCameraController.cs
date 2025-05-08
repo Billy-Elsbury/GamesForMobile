@@ -78,6 +78,7 @@ public class GameCameraController : MonoBehaviour
         transform.Rotate(Vector3.right, -gyroDelta.x * gyroSensitivity, Space.World); // Use world space for gyro rotation
     }
 
+    //Called from button
     public void ToggleGyro()
     {
         useGyro = !useGyro;
